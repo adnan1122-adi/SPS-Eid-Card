@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Eid Mubarak Card Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 30px;
+    }
+    #cardCanvas {
+      border: 1px solid #ccc;
+      margin-top: 20px;
+      max-width: 100%;
+    }
+    input, select {
+      padding: 8px;
+      font-size: 16px;
+      margin: 5px;
+      width: 150px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Create Your Eid Mubarak Card</h1>
+  <p>Enter your name and adjust the settings below, then click "Generate Card".</p>
+  <p> By : M. Waqas Akhtar</p>
+
+  <input type="text" id="nameInput" placeholder="Enter your name">
+  <br>
+  <label>X Position:</label>
+  <input type="number" id="xPos" value="350">
+  <label>Y Position:</label>
+  <input type="number" id="yPos" value="620">
+  <br>
+  <label>Text Color:</label>
+  <input type="color" id="textColor" value="#dc9263">
+  <br>
+  <label>Text Size:</label>
+  <select id="textSize">
+    <option value="30">30px</option>
+    <option value="40">40px</option>
+    <option value="50" selected>50px</option>
+    <option value="60">60px</option>
+    <option value="70">70px</option>
+  </select>
+  <br>
+  <button onclick="generateCard()">Generate Card</button>
+  <br><br>
+  
+  <canvas id="cardCanvas" width="1080" height="1080"></canvas>
+  <br><br>
+
+  <button onclick="downloadCard()">Download Card</button>
+
+  <script>
+    function generateCard() {
+      const canvas = document.getElementById('cardCanvas');
+      const context = canvas.getContext('2d');
+      const name = document.getElementById('nameInput').value.trim();
+      const xPos = parseInt(document.getElementById('xPos').value) || 350;
+      const yPos = parseInt(document.getElementById('yPos').value) || 620;
+      const textColor = document.getElementById('textColor').value;
+      const textSize = document.getElementById('textSize').value;
+
+      if (!name) {
+        alert("Please enter your name!");
+        return;
+      }
+
+      const background = new Image();
+      background.src = 'sps.png';
+
+      background.onload = function() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+        context.font = `${textSize}px Berkshire Swash`;
+        context.fillStyle = textColor;
+        context.textAlign = 'center';
+        
+        context.fillText(name, xPos, yPos);
+      };
+
+      background.onerror = function () {
+        alert("Error loading background image. Check the image path.");
+      };
+    }
+
+    function downloadCard() {
+      const canvas = document.getElementById('cardCanvas');
+      const link = document.createElement('a');
+      if (!canvas.toDataURL().includes("data:image")) {
+        alert("Please generate the card before downloading!");
+        return;
+      }
+      link.download = 'EidMubarakCard.png';
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+  </script>
+</body>
+</html>
